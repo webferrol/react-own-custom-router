@@ -48,7 +48,7 @@ export default function App () {
       window.removeEventListener(import.meta.env.VITE_PUSHSTATE, onLocationChange)
       window.removeEventListener(import.meta.env.VITE_POPSTATE, onLocationChange)
     }
-  }, [currentPath])
+  }, [])
 
   return (
     <main className='app-container'>

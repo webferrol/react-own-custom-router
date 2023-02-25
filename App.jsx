@@ -1,33 +1,30 @@
-import { useState } from 'react'
-
-function HomePage () {
-  return (
-    <>
-      <h1>Home page</h1>
-    </>
-  )
-}
-
-function AboutPage () {
-  return (
-    <>
-      <h1>About page</h1>
-    </>
-  )
-}
+import { useState, useEffect } from 'react'
+import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
 
 export default function App () {
-  const [location, setLocation] = useState(window.location.pathname)
+  const [currentPath, setCurrentPath] = useState(window.location.pathname)
+
+  useEffect(() => {
+    const onLocationChange = () => {
+      setCurrentPath(window.location.pathname)
+    }
+    // Nos subscribimos
+    window.addEventListener(import.meta.env.VITE_PUSHSTATE, onLocationChange)
+    // Hay que subscribirse también al envento de ir haca atras
+    window.addEventListener(import.meta.env.VITE_POPSTATE, onLocationChange)
+
+    return () => {
+      // Eliminamos las subscripciónes
+      window.removeEventListener(import.meta.env.VITE_PUSHSTATE, onLocationChange)
+      window.removeEventListener(import.meta.env.VITE_POPSTATE, onLocationChange)
+    }
+  }, [])
 
   return (
-    <div className='app-container'>
-      <a href='/' onClick={() => setLocation(window.location.pathname)}>Home</a>
-      <a href='about' onClick={() => setLocation(window.location.pathname)}>About</a>
-      <br />
-
-      {JSON.stringify(window.location)}
-
-      {location === '/' ? <HomePage /> : <AboutPage />}
-    </div>
+    <main className='app-container'>
+      {currentPath === '/' && <HomePage />}
+      {currentPath === '/about' && <AboutPage />}
+    </main>
   )
 }

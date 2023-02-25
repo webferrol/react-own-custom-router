@@ -1,19 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-function HomePage () {
+const NAVIGATION_EVENT = 'pushState'
+
+function navigate (href) {
+  // history.pushState() anexa un registro en la sesión de historial del navegador
+  window.history.pushState({}, '', href) // No refresca la página
+
+  // Crear un evento personalizado
+  const navigationEvent = new Event(NAVIGATION_EVENT)
+
+  window.dispatchEvent(navigationEvent)
+}
+
+function HomePage (props) {
+  const { pathname } = props
   return (
     <>
       <h1>Home page</h1>
-      <a href='/about'>About</a>
+      <strong>{pathname}</strong><br />
+      <button onClick={() => navigate('/about')}>About</button>
     </>
   )
 }
 
-function AboutPage () {
+function AboutPage ({ pathname }) {
   return (
     <>
       <h1>About page</h1>
-      <a href='/'>Home</a>
+      <strong>{pathname}</strong><br />
+      <button onClick={() => navigate('/')}>Home</button>
     </>
   )
 }
@@ -21,16 +36,23 @@ function AboutPage () {
 export default function App () {
   const [currentPath, setCurrentPath] = useState(window.location.pathname)
 
+  useEffect(() => {
+    const onLocationChange = () => {
+      setCurrentPath(window.location.pathname)
+    }
+    // Nos subscribimos
+    window.addEventListener(NAVIGATION_EVENT, onLocationChange)
+
+    return () => {
+      // Eliminamos la subscripción
+      window.removeEventListener(NAVIGATION_EVENT, onLocationChange)
+    }
+  }, [currentPath])
+
   return (
     <main className='app-container'>
-      <a href='/' onClick={() => setCurrentPath(window.location.pathname)}>Home</a>
-      <a href='about' onClick={() => setCurrentPath(window.location.pathname)}>About</a>
-      <br />
-
-      {JSON.stringify(window.location)}
-
-      {currentPath === '/' && <HomePage />}
-      {currentPath === '/about' && <AboutPage />}
+      {currentPath === '/' && <HomePage pathname={currentPath} />}
+      {currentPath === '/about' && <AboutPage pathname={currentPath} />}
     </main>
   )
 }

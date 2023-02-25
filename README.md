@@ -5,3 +5,4 @@
 3. [x] Instalar standard
 4. [x] Crea una forma de hacer MPAs (Multiple Page Applications) 
 5. [x] Crea una forma de hacer SPAS (Simple Page Applications)
+6. [] Poder navegar con el botón "Atrás"

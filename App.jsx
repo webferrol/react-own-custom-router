@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 
-const NAVIGATION_EVENT = 'pushState'
-
 function navigate (href) {
   // history.pushState() anexa un registro en la sesión de historial del navegador
   window.history.pushState({}, '', href) // No refresca la página
 
   // Crear un evento personalizado
-  const navigationEvent = new Event(NAVIGATION_EVENT)
+  const navigationEvent = new Event(import.meta.env.VITE_PUSHSTATE)
 
   window.dispatchEvent(navigationEvent)
 }
@@ -41,11 +39,14 @@ export default function App () {
       setCurrentPath(window.location.pathname)
     }
     // Nos subscribimos
-    window.addEventListener(NAVIGATION_EVENT, onLocationChange)
+    window.addEventListener(import.meta.env.VITE_PUSHSTATE, onLocationChange)
+    // Hay que subscribirse también al envento de ir haca atras
+    window.addEventListener(import.meta.env.VITE_POPSTATE, onLocationChange)
 
     return () => {
-      // Eliminamos la subscripción
-      window.removeEventListener(NAVIGATION_EVENT, onLocationChange)
+      // Eliminamos las subscripciónes
+      window.removeEventListener(import.meta.env.VITE_PUSHSTATE, onLocationChange)
+      window.removeEventListener(import.meta.env.VITE_POPSTATE, onLocationChange)
     }
   }, [currentPath])
 

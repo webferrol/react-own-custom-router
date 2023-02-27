@@ -6,4 +6,5 @@
 4. [x] Crea una forma de hacer MPAs (Multiple Page Applications) 
 5. [x] Crea una forma de hacer SPAS (Simple Page Applications)
 6. [x] Poder navegar con el botón "Atrás"
-7. [] Crear un componente router para hacer nuestro código más declarativo
+7. [x] Crear un componente router para hacer nuestro código más declarativo
+8. [x] Soportar ruta por defecto
